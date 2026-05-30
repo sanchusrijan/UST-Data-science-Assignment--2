@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSCENARIO>
+  <FileHeader revMajor="1" revMinor="0" date="2026-05-29T12:00:00" description="S2 Emergency Braking Scenario" author="UST Automotive Data Science"/>
+  <ParameterDeclarations/>
+  <CatalogLocations/>
+  <RoadNetwork>
+    <LogicFile filepath="straight_highway.xodr"/>
+  </RoadNetwork>
+  <Entities>
+    <ScenarioObject name="Ego">
+      <Vehicle name="EgoVehicle" vehicleCategory="car">
+        <ParameterDeclarations/>
+        <Performance maxSpeed="60.0" maxAcceleration="10.0" maxDeceleration="10.0"/>
+        <BoundingBox>
+          <Center x="1.5" y="0.0" z="0.9"/>
+          <Dimensions width="1.8" length="4.5" height="1.5"/>
+        </BoundingBox>
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.6" trackWidth="1.6" positionX="1.4" positionZ="0.3"/>
+          <RearAxle maxSteering="0.0" wheelDiameter="0.6" trackWidth="1.6" positionX="-1.4" positionZ="0.3"/>
+        </Axles>
+        <Properties/>
+      </Vehicle>
+    </ScenarioObject>
+    <ScenarioObject name="NPC">
+      <Vehicle name="NPCVehicle" vehicleCategory="car">
+        <ParameterDeclarations/>
+        <Performance maxSpeed="60.0" maxAcceleration="10.0" maxDeceleration="10.0"/>
+        <BoundingBox>
+          <Center x="1.5" y="0.0" z="0.9"/>
+          <Dimensions width="1.8" length="4.5" height="1.5"/>
+        </BoundingBox>
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.6" trackWidth="1.6" positionX="1.4" positionZ="0.3"/>
+          <RearAxle maxSteering="0.0" wheelDiameter="0.6" trackWidth="1.6" positionX="-1.4" positionZ="0.3"/>
+        </Axles>
+        <Properties/>
+      </Vehicle>
+    </ScenarioObject>
+  </Entities>
+  <Storyboard>
+    <Init>
+      <Actions>
+        <Private entityRef="Ego">
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time"/>
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="22.22"/> <!-- 80 km/h -->
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+          <PrivateAction>
+            <PositionAction>
+              <LanePosition roadId="1" laneId="-2" offset="0.0" s="50.0"/>
+            </PositionAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="NPC">
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time"/>
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="22.22"/> <!-- 80 km/h -->
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+          <PrivateAction>
+            <PositionAction>
+              <LanePosition roadId="1" laneId="-2" offset="0.0" s="0.0"/>
+            </PositionAction>
+          </PrivateAction>
+        </Private>
+      </Actions>
+    </Init>
+    <Story name="EmergencyBrakingStory">
+      <Act name="EmergencyBrakingAct">
+        <ManeuverGroup maximumExecutionCount="1" name="EgoBrakingGroup">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="Ego"/>
+          </Actors>
+          <Maneuver name="EgoBrakingManeuver">
+            <Event name="EmergencyBrakeEvent" priority="overwrite">
+              <Action name="BrakeAction">
+                <LongitudinalAction>
+                  <SpeedAction>
+                    <SpeedActionDynamics dynamicsShape="linear" value="-8.0" dynamicsDimension="rate"/>
+                    <SpeedActionTarget>
+                      <AbsoluteTargetSpeed value="0.0"/> <!-- Stop -->
+                    </SpeedActionTarget>
+                  </SpeedAction>
+                </LongitudinalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="BrakeTimeCondition" delay="0.0" conditionEdge="rising">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="3.0" rule="greaterThan"/>
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStartCondition" delay="0.0" conditionEdge="rising">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterThan"/>
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+      </Act>
+    </Story>
+    <StopTrigger/>
+  </Storyboard>
+</OpenSCENARIO>

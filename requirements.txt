@@ -1,0 +1,8 @@
+gymnasium>=0.29.1
+stable-baselines3[extra]>=2.2.1
+metadrive-simulator @ git+https://github.com/metadriverse/metadrive.git@main
+pythonfmu>=0.6.0
+fmpy>=0.3.16
+numpy>=1.24.0,<2.0.0
+torch>=2.0.0
+matplotlib>=3.7.0
